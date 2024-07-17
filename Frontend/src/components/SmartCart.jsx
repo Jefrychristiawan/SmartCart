@@ -12,11 +12,13 @@ export default function SmartCart() {
           </div>
         </div>
         
-        <div><p className='font-black text-xl'>SmartCart</p></div>
+        <div><p className='font-black text-3xl'>SmartCart</p></div>
         <div className='flex items-center space-x-3'> 
-          <Search sx={{ fontSize: 35}}/> 
+          <Search sx={{ fontSize: 35}}/>
+          <ShoppingCartOutlined sx={{ fontSize: 35}}/> 
+          <span>Login</span>
+          <span>Register</span>
           <PermIdentity sx={{ fontSize: 35}}/> 
-          <ShoppingCartOutlined sx={{ fontSize: 35}}/>
           <p>$0.00</p>
         </div>
     </div>

@@ -7,6 +7,10 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
+    image:{
+        type: String,
+        required: true
+    },
     description:{
         type: String,
         required: true
@@ -15,6 +19,10 @@ const productSchema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    category: {
+        type: String,
+        required: true
     }
 }, {timestamps: true})
 

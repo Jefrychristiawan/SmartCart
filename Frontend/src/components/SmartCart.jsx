@@ -19,7 +19,7 @@ export default function SmartCart() {
           <ShoppingCartOutlined sx={{ fontSize: 35}}/> 
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
-          <PermIdentity sx={{ fontSize: 35}}/> 
+          <Link to="/profile"><PermIdentity sx={{ fontSize: 35}}/> </Link>
           <p>$0.00</p>
         </div>
     </div>

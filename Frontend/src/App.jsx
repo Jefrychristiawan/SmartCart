@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import Shop from './pages/Shop'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Profile from './pages/Profile'
 // https://i.pinimg.com/originals/f3/20/ee/f320eeb6a56143d7ef2879f4a77c3827.png
 function App() {
   
@@ -29,6 +30,10 @@ function App() {
         <Route 
           path="/register" 
           element={<Register />} 
+        />
+        <Route 
+          path="/profile" 
+          element={<Profile />} 
         />
       </Routes>
     </BrowserRouter>

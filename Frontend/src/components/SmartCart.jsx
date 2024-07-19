@@ -1,5 +1,6 @@
 import { HeadphonesOutlined, PermIdentity, Search, ShoppingCartOutlined} from '@mui/icons-material';
 import { green } from '@mui/material/colors';
+import { Link } from 'react-router-dom';
 export default function SmartCart() {
   return (
     <div className='flex justify-between px-12 py-6 items-center'>
@@ -16,8 +17,8 @@ export default function SmartCart() {
         <div className='flex items-center space-x-3'> 
           <Search sx={{ fontSize: 35}}/>
           <ShoppingCartOutlined sx={{ fontSize: 35}}/> 
-          <span>Login</span>
-          <span>Register</span>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
           <PermIdentity sx={{ fontSize: 35}}/> 
           <p>$0.00</p>
         </div>

@@ -1,8 +1,47 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Apple from "../assets/Apple.jpg"
-import { CloseOutlined } from "@mui/icons-material"
+import AddProduct from "../components/AddProduct"
+
+
 export default function Profile() {
     const [addPopUp, setAddPopUp] = useState(false)
+    const [products, setProducts] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [product, setProduct] = useState(null)
+    useEffect(() => {
+        const fetchProducts = async () => {
+        const response = await fetch('http://localhost:4000/api/products')
+        const json = await response.json()
+
+        if (response.ok) {
+            setProducts(json)
+            setLoading(false)
+        }
+        }
+
+        fetchProducts()
+    }, [addPopUp,products])
+    
+    const handleDelete = async (id) => {
+        const response = await fetch('http://localhost:4000/api/products/' + id, {
+          method: 'DELETE'
+        })
+        const json = await response.json()
+    
+        if (response.ok) {
+          setProducts(products.filter(item => item._id !== id))
+        }
+    }
+    // console.log(products)
+    const handleEdit = async (id) => {
+        const response = await fetch('http://localhost:4000/api/products/' + id)
+        const json = await response.json()
+        if (response.ok) {
+            setProduct(json)
+            
+        }
+        console.log(product)
+    }
   return (
     <div className="flex m-10 gap-10">
         <div className="flex-1 flex flex-col items-center gap-4 border-2 border-gray-700 rounded-lg p-5">
@@ -22,46 +61,46 @@ export default function Profile() {
             
         </div>
         <div className="flex-2 w-full">
-            <div className="flex justify-center items-center h-full flex-col gap-20">
-                <span className="text-4xl text-center font-bold">Interested In Becoming Seller ?? Click Button Below to add Your Product Now</span>
-                <button className="bg-green-500 text-white px-10 py-5 rounded-lg text-xl" onClick={() => setAddPopUp(true)}>Add Your Product</button>
+            {((!products || !products.length) && !loading) &&
+                <div className="flex justify-center items-center h-full flex-col gap-20">
+                    <span className="text-4xl text-center font-bold">Interested In Becoming Seller ?? Click Button Below to add Your Product Now</span>
+                    <button className="bg-green-500 text-white px-10 py-5 rounded-lg text-xl" onClick={() => setAddPopUp(true)}>Add Your Product</button>
+                </div>
+            }
+            {(products && products.length >0) && <span className="font-bold">List of Your Products</span>}
+            
+            <div className="flex flex-wrap">
+            {
+                products?.map((product) => {
+                    return(
+                        
+                            <div key={product._id} className="flex flex-col items-center space-y-2">
+                                <div className="w-56 border border-gray-300 flex flex-col justify-center items-center py-6 gap-2">
+                                    <img className="w-40 h-40 object-cover" src={product.image} alt="" />
+                                    <span className="text-gray-500">{product.category} </span>
+                                    <span className="font-bold">{product.name}</span>
+                                    <span className="text-green-600 font-bold">{product.price}</span>
+                                    <div className="space-x-2">
+                                        <button className="bg-green-500 text-white py-1 px-2" onClick={() => handleEdit(product._id)}>Edit</button>
+                                        <button className="bg-red-500 text-white py-1 px-2" onClick={() => handleDelete(product._id)}>Delete</button>
+                                    </div>
+                                    
+                                </div>
+                                    
+                            </div>
+                        
+                    )
+                    
+                })
+                
+            }
             </div>
         </div>
         {addPopUp && (
-            <div className="flex justify-center fixed inset-0 bg-[rgba(0,0,0,0.5)] overflow-auto">
-                <div className="bg-white flex flex-col w-[400px] p-10 gap-5 h-[1000px]">
-                    <span className="ml-auto cursor-pointer" onClick={() => {setAddPopUp(false)}}>
-                        <CloseOutlined sx={{color:"gray"}}></CloseOutlined>
-                    </span>
-                    <span className="font-bold text-2xl">Add New Product</span>
-                    <label htmlFor="productName" className="block font-semibold">Product Name</label>
-                    <input type="text" id="productName" placeholder="Enter Product Name" className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"/>
-                    <label htmlFor="productDescription" className="block font-semibold">Product Description</label>
-                    <textarea id="productDescription" placeholder="Enter Product Description" className="border border-gray-300 rounded-lg pl-5 focus:outline-none resize-none "/>
-                    <label htmlFor="productPrice" className="block font-semibold">Price ($)</label>
-                    <input type="number" id="productPrice" placeholder="Enter Price" className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"/>
-                    <label htmlFor="productStock" className="block font-semibold">Stock</label>
-                    <input type="number" id="productStock" placeholder="Enter Stock" className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"/>
-                    
-                    <div className="font-bold">Category</div>
-                    {['Fruits', 'Vegetables', 'Snacks', 'Spices', 'Drinks'].map(category => (
-                        <label key={category} className="flex items-center cursor-pointer">
-                            <input type="checkbox" className="hidden peer" />
-                            <span className="w-5 h-5 border-2 mr-2 rounded border-green-500 peer-checked:bg-green-500 peer-checked:text-transparent peer-checked:border-transparent flex items-center justify-center">
-                                <svg className="w-3 h-3 text-white stroke-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-                                    <path d="M6 10l4 4L18 6"></path>
-                                </svg>
-                            </span>
-                            {category}
-                        </label>
-                    ))}
-                    
-                    <label className="block font-semibold">Upload Product Picture</label>
-                    <input type="file" name="" id="productImage" />
-                    <button className="bg-green-500 text-white font-bold px-6 py-3">Add Product</button>
-                </div>
-            </div>
+            <AddProduct setAddPopUp={setAddPopUp}/>
         )}
     </div>
   )
 }
+
+

@@ -1,5 +1,6 @@
 const Product = require('../models/productModel')
 const mongoose = require('mongoose')
+
 //get all products
 const getProducts = async(req,res) =>{
     const products = await Product.find({}).sort({createdAt: -1})
@@ -25,10 +26,10 @@ const getProduct = async(req, res) =>{
 
 //create new product
 const createProduct = async (req, res) => {
-    const {name, description, price} = req.body
+    const {name, description, price, category, image, stock} = req.body
     
     try{
-        const product = await Product.create({name, description, price})
+        const product = await Product.create({name, description, price, category, image, stock})
         
         res.status(200).json(product)
     } catch (error) {

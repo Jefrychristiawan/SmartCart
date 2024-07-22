@@ -1,7 +1,23 @@
 import FeatureProduct from "../components/FeatureProduct"
 import Apple from "../assets/Apple.jpg"
 import Carrot from "../assets/Carrot.jpg"
+import { useEffect, useState } from "react"
 export default function Shop() {
+    const [products, setProducts] = useState([])
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const response = await fetch('http://localhost:4000/api/products')
+            const json = await response.json()
+
+            if (response.ok) {
+                setProducts(json)
+                
+            }
+        }
+
+        fetchProducts()
+    }, [])
+    console.log(products)
   return (
     <div className="flex m-10">
         <div className='flex flex-col flex-1 space-y-2'>
@@ -76,18 +92,15 @@ export default function Shop() {
                 </div>
             </div>
         </div>
-        <div className='flex-3'>
+        <div className='flex-3 w-full'>
             <div className="flex flex-wrap justify-center mt-14">
-              <FeatureProduct image={Apple} category="Fruits" title="Blue Apple" price="$100.67"/>
-              <FeatureProduct image={Carrot} category="Vegetables" title="Carrot" price="$10.23"/>
-              <FeatureProduct image={Apple} category="Fruits" title="Blue Apple" price="$100.67"/>
-              <FeatureProduct image={Carrot} category="Vegetables" title="Carrot" price="$10.23"/>
-              <FeatureProduct image={Apple} category="Fruits" title="Blue Apple" price="$100.67"/>
-              <FeatureProduct image={Carrot} category="Vegetables" title="Carrot" price="$10.23"/>
-              <FeatureProduct image={Apple} category="Fruits" title="Blue Apple" price="$100.67"/>
-              <FeatureProduct image={Carrot} category="Vegetables" title="Carrot" price="$10.23"/>
-              <FeatureProduct image={Apple} category="Fruits" title="Blue Apple" price="$100.67"/>
-              <FeatureProduct image={Carrot} category="Vegetables" title="Carrot" price="$10.23"/>
+                {products.map((product) => {
+                    
+                    return(
+                        <FeatureProduct key={product._id} image={product.image} category={product.category} title={product.name} price={product.price}/>
+                    )
+                    
+                })}
             </div>
         </div>
     </div>

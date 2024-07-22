@@ -38,7 +38,7 @@ export default function Profile() {
         const json = await response.json()
         if (response.ok) {
             setProduct(json)
-            
+            setAddPopUp(true)
         }
         console.log(product)
     }
@@ -97,7 +97,7 @@ export default function Profile() {
             </div>
         </div>
         {addPopUp && (
-            <AddProduct setAddPopUp={setAddPopUp}/>
+            <AddProduct product = {product} setAddPopUp={setAddPopUp}/>
         )}
     </div>
   )

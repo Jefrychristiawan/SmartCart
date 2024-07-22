@@ -1,12 +1,14 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react"
 import { CloseOutlined } from "@mui/icons-material"
-export default function AddProduct({setAddPopUp}) {
-    const [productName, setProductName]  = useState('')
-    const [productDesc, setProductDesc] = useState('')
-    const [productStock, setProductStock] = useState()
-    const [productPrice, setProductPrice] = useState()
-    const [productCategory, setProductCategory] = useState([])
-    const [productImage, setProductImage] = useState('')
+export default function AddProduct({product, setAddPopUp}) {
+    const [productId, setProductId] = useState(product? product._id:null)
+    const [productName, setProductName]  = useState(product?.name)
+    const [productDesc, setProductDesc] = useState(product?.description)
+    const [productStock, setProductStock] = useState(product?.stock)
+    const [productPrice, setProductPrice] = useState(product?.price)
+    const [productCategory, setProductCategory] = useState(product? product.category.split(','): [])
+    const [productImage, setProductImage] = useState(product?.image)
     const [error,setError] = useState(null)
     const handleCheckboxChange = (category) => {
         setProductCategory(prevState =>
@@ -15,16 +17,18 @@ export default function AddProduct({setAddPopUp}) {
             : [...prevState, category]
         );
     };
+    // console.log(productId)
     const handleSubmit = async () => {
+      if(!productId){
         const product = {
-            name: productName,
-            description: productDesc,
-            price: productPrice,
-            category: productCategory.join(','),
-            image: productImage,
-            stock: productStock
+          name: productName,
+          description: productDesc,
+          price: productPrice,
+          category: productCategory.join(','),
+          image: productImage,
+          stock: productStock
         }
-        
+      
         const response = await fetch('http://localhost:4000/api/products', {
           method: 'POST',
           body: JSON.stringify(product),
@@ -46,8 +50,44 @@ export default function AddProduct({setAddPopUp}) {
           setProductCategory([])
           setProductImage('')
           setAddPopUp(false)
-          console.log('new workout added:', json)
+          
         }
+      }
+      else{
+        const product = {
+          name: productName,
+          description: productDesc,
+          price: productPrice,
+          category: productCategory.join(','),
+          image: productImage,
+          stock: productStock
+        }
+      
+        const response = await fetch('http://localhost:4000/api/products/' + productId, {
+          method: 'PATCH',
+          body: JSON.stringify(product),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        const json = await response.json()
+    
+        if (!response.ok) {
+          setError(json.error)
+        }
+        if (response.ok) {
+          setError(null)
+          setProductId(null)
+          setProductName('')
+          setProductDesc('')
+          setProductStock(null)
+          setProductPrice(null)
+          setProductCategory([])
+          setProductImage('')
+          setAddPopUp(false)
+          
+        }
+      }
     
     }
     const handleFileUpload = async (e) => {
@@ -67,23 +107,27 @@ export default function AddProduct({setAddPopUp}) {
             <input type="text" id="productName" placeholder="Enter Product Name" 
                 className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"
                 onChange={(e) => {setProductName(e.target.value)}}
+                value={productName}
             />
             <label htmlFor="productDescription" className="block font-semibold">Product Description</label>
             <textarea id="productDescription" placeholder="Enter Product Description" 
                 className="border border-gray-300 rounded-lg pl-5 focus:outline-none resize-none "
                 onChange={(e) => {setProductDesc(e.target.value)}}
+                value={productDesc}
             />
             <label htmlFor="productPrice" className="block font-semibold">Price ($)</label>
             <input type="number" id="productPrice" placeholder="Enter Price" 
                 className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"
                 onChange={(e) => {setProductPrice(e.target.value)}}
+                value={productPrice}
             />
             <label htmlFor="productStock" className="block font-semibold">Stock</label>
             <input type="number" id="productStock" placeholder="Enter Stock" 
                 className="border border-gray-300 rounded-lg h-8 pl-5 focus:outline-none"
                 onChange={(e) => {setProductStock(e.target.value)}}
+                value={productStock}
             />
-            <div className="font-bold">Category</div>
+            <div className="font-semibold">Category</div>
             {['Fruits', 'Vegetables', 'Snacks', 'Spices', 'Drinks'].map(category => (
                 <label key={category} className="flex items-center cursor-pointer">
                     <input type="checkbox" className="hidden peer" 
@@ -99,9 +143,9 @@ export default function AddProduct({setAddPopUp}) {
                 </label>
             ))}
                     
-            <label className="block font-semibold">Upload Product Picture</label>
+            <label className="block font-semibold">Upload {product? 'New' :''} Product Picture</label>
             <input type="file" name="" id="productImage" accept='.jpeg, .png, .jpg' onChange={(e) => handleFileUpload(e)}/>
-            <button className="bg-green-500 text-white font-bold px-6 py-3" onClick={handleSubmit}>Add Product</button>
+            <button className="bg-green-500 text-white font-bold px-6 py-3" onClick={handleSubmit}>{product? 'Save Changes Product' : 'Add Product'}</button>
         </div>
     </div>
   )

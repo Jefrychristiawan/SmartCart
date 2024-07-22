@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const productRoutes = require('./routes/products')
+const userRoutes = require('./routes/user')
 const cors = require('cors')
 const bodyParser = require('body-parser');
 
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.json())
 
 app.use('/api/products', productRoutes)
+app.use('/api/user', userRoutes)
 
 //connect to db
 mongoose.connect(process.env.MONGO_URL)

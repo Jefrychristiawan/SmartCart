@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const productRoutes = require('./routes/products')
 const userRoutes = require('./routes/user')
+const orderRoutes = require('./routes/order')
 const cors = require('cors')
 const bodyParser = require('body-parser');
 
@@ -18,6 +19,7 @@ app.use(express.json())
 
 app.use('/api/products', productRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/order', orderRoutes)
 
 //connect to db
 mongoose.connect(process.env.MONGO_URL)

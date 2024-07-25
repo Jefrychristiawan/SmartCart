@@ -1,12 +1,17 @@
 import FeatureProduct from "../components/FeatureProduct"
-import Apple from "../assets/Apple.jpg"
-import Carrot from "../assets/Carrot.jpg"
 import { useEffect, useState } from "react"
+import { useAuthContext } from "../hooks/useAuthContext"
+import { Link } from "react-router-dom"
 export default function Shop() {
     const [products, setProducts] = useState([])
+    const {user} = useAuthContext()
     useEffect(() => {
         const fetchProducts = async () => {
-            const response = await fetch('http://localhost:4000/api/products')
+            const response = await fetch('http://localhost:4000/api/products/all',{
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
             const json = await response.json()
 
             if (response.ok) {
@@ -14,10 +19,11 @@ export default function Shop() {
                 
             }
         }
-
-        fetchProducts()
-    }, [])
-    console.log(products)
+        if(user){
+            fetchProducts()
+        }
+        
+    }, [user])
   return (
     <div className="flex m-10">
         <div className='flex flex-col flex-1 space-y-2'>
@@ -97,7 +103,7 @@ export default function Shop() {
                 {products.map((product) => {
                     
                     return(
-                        <FeatureProduct key={product._id} image={product.image} category={product.category} title={product.name} price={product.price}/>
+                        <Link to={"/shop/" + product._id} key={product._id} ><FeatureProduct image={product.image} category={product.category} title={product.name} price={product.price}/></Link>
                     )
                     
                 })}

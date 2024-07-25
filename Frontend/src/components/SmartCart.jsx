@@ -23,7 +23,7 @@ export default function SmartCart() {
           {!user && <Link to="/register">Register</Link>}
           {user && <Link to="/profile"><PermIdentity sx={{ fontSize: 35}}/> </Link>}
           
-          {user && <p>{user.balance}</p>}
+          {user && <p>${user.balance}</p>}
         </div>
     </div>
   )

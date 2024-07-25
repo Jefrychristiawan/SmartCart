@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
+import { useAuthContext } from './hooks/useAuthContext'
 import SmartCart from './components/SmartCart'
 import Navbar from './components/Navbar'
 import Home from "./pages/Home"
@@ -6,9 +7,10 @@ import Shop from './pages/Shop'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import ProductDetail from './pages/ProductDetail'
 // https://i.pinimg.com/originals/f3/20/ee/f320eeb6a56143d7ef2879f4a77c3827.png
 function App() {
-  
+  const { user } = useAuthContext()
   return(
     <BrowserRouter>
       <SmartCart />
@@ -25,15 +27,19 @@ function App() {
         />
         <Route 
           path="/login" 
-          element={<Login />} 
+          element={!user ? <Login /> : <Navigate to="/profile" />} 
         />
         <Route 
           path="/register" 
-          element={<Register />} 
+          element={!user ? <Register /> : <Navigate to="/profile" />} 
         />
         <Route 
           path="/profile" 
-          element={<Profile />} 
+          element={user ? <Profile />: <Navigate to="/login" />} 
+        />
+        <Route 
+          path='/shop/:id'
+          element={<ProductDetail />}
         />
       </Routes>
     </BrowserRouter>

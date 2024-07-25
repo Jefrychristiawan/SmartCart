@@ -9,7 +9,7 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
       e.preventDefault()
-      await signup(username,email,password)
+      await signup(username,email,password,0)
     }
 
     return (

@@ -13,7 +13,11 @@ export default function Profile() {
     const { user } = useAuthContext()
     useEffect(() => {
         const fetchProducts = async () => {
-        const response = await fetch('http://localhost:4000/api/products')
+        const response = await fetch('http://localhost:4000/api/products',{
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
         const json = await response.json()
 
         if (response.ok) {
@@ -21,13 +25,21 @@ export default function Profile() {
             setLoading(false)
         }
         }
-
-        fetchProducts()
-    }, [addPopUp,products])
+        if(user){
+            fetchProducts()
+        }
+        
+    }, [addPopUp, user])
     
     const handleDelete = async (id) => {
+        if(!user){
+            return
+        }
         const response = await fetch('http://localhost:4000/api/products/' + id, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
         })
         const json = await response.json()
     
@@ -37,6 +49,7 @@ export default function Profile() {
     }
     // console.log(products)
     const handleEdit = async (id) => {
+        
         const response = await fetch('http://localhost:4000/api/products/' + id)
         const json = await response.json()
         if (response.ok) {
@@ -55,7 +68,7 @@ export default function Profile() {
         <div className="flex-1 flex flex-col items-center gap-4 border-2 border-gray-700 rounded-lg p-5">
             <img className="w-40 h-40 object-cover rounded-full" src={Apple} alt="" />
             <span className="font-extrabold text-2xl">{user?.username}</span>
-            <span className="font-bold text-xl">{user?.balance}</span>
+            <span className="font-bold text-xl">${user?.balance}</span>
             <button className="bg-red-500 text-white px-5 py-3 rounded-lg" onClick={handleClick}> Logout </button>
             <button className="bg-green-500 text-white px-5 py-3 rounded-lg">Top Up</button>
             <div className="bg-gray-300 border border-gray-400 rounded-lg px-6 py-3 w-96">

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react"
 import { CloseOutlined } from "@mui/icons-material"
+import { useAuthContext } from "../hooks/useAuthContext"
 export default function AddProduct({product, setAddPopUp}) {
     const [productId, setProductId] = useState(product? product._id:null)
     const [productName, setProductName]  = useState(product?.name)
@@ -10,6 +11,7 @@ export default function AddProduct({product, setAddPopUp}) {
     const [productCategory, setProductCategory] = useState(product? product.category.split(','): [])
     const [productImage, setProductImage] = useState(product?.image)
     const [error,setError] = useState(null)
+    const { user } = useAuthContext()
     const handleCheckboxChange = (category) => {
         setProductCategory(prevState =>
           prevState.includes(category)
@@ -19,6 +21,12 @@ export default function AddProduct({product, setAddPopUp}) {
     };
     // console.log(productId)
     const handleSubmit = async () => {
+      if(!user){
+        setError('You must be logged in')
+        console.log(error)
+        return
+      }
+
       if(!productId){
         const product = {
           name: productName,
@@ -33,7 +41,8 @@ export default function AddProduct({product, setAddPopUp}) {
           method: 'POST',
           body: JSON.stringify(product),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           }
         })
         const json = await response.json()
@@ -67,7 +76,8 @@ export default function AddProduct({product, setAddPopUp}) {
           method: 'PATCH',
           body: JSON.stringify(product),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
           }
         })
         const json = await response.json()

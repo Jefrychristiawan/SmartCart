@@ -1,9 +1,19 @@
 const Product = require('../models/productModel')
 const mongoose = require('mongoose')
 
+const getAllProducts = async (req, res) => {
+    const user_id = req.user._id
+    
+    const products = await Product.find({ user_id: { $ne: user_id } })
+                                      .sort({ createdAt: -1 });
+    
+    res.status(200).json(products)
+}
 //get all products
 const getProducts = async(req,res) =>{
-    const products = await Product.find({}).sort({createdAt: -1})
+    const user_id = req.user._id
+    
+    const products = await Product.find({ user_id  }).sort({createdAt: -1})
     
     res.status(200).json(products)
 }
@@ -29,7 +39,8 @@ const createProduct = async (req, res) => {
     const {name, description, price, category, image, stock} = req.body
     
     try{
-        const product = await Product.create({name, description, price, category, image, stock})
+        const user_id = req.user._id
+        const product = await Product.create({name, description, price, category, image, stock, user_id})
         
         res.status(200).json(product)
     } catch (error) {
@@ -74,6 +85,7 @@ const updateProduct = async (req,res) => {
 }
 
 module.exports = {
+    getAllProducts,
     getProducts,
     getProduct,
     createProduct,

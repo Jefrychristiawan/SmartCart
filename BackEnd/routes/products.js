@@ -1,5 +1,6 @@
 const express = require('express')
 const {
+    getAllProducts,
     getProducts,
     getProduct,
     createProduct,
@@ -10,13 +11,15 @@ const requireAuth = require('../middleware/requireAuth')
 
 const router = express.Router()
 
-router.get('/', getProducts)
+router.get('/all',requireAuth, getAllProducts)
+
+router.get('/', requireAuth, getProducts)
 
 router.get('/:id', getProduct)
 
-router.post('/', createProduct)
+router.post('/', requireAuth, createProduct)
 
-router.delete('/:id', deleteProduct)
+router.delete('/:id', requireAuth, deleteProduct)
 
-router.patch('/:id', updateProduct)
+router.patch('/:id', requireAuth, updateProduct)
 module.exports = router

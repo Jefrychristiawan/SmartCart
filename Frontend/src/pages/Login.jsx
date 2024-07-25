@@ -1,11 +1,20 @@
 import { useState } from "react"
+import { useLogin } from "../hooks/useLogin"
 
 export default function Login() {
   const [email,setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const {login, error, isLoading} = useLogin()
+  
+  const handleSubmit = async (e) => {
+    // console.log('bb')
+    e.preventDefault()
+    
+    await login(email,password)
+  }
   return (
     <div className="flex justify-center items-center">
-        <form action="">
+        <form action="" onSubmit={handleSubmit}>
             <div className="shadow-custom flex flex-col w-96 rounded-lg py-8 px-5 space-y-4">
                 <span className="text-green-500 font-bold text-4xl mx-auto">Login</span>
                 <span className="block">Email:</span>
@@ -21,7 +30,8 @@ export default function Login() {
                 value={password}
                 />
                 <div className="flex-grow"></div>
-                <button className="bg-green-500 rounded-md py-3 text-white mt-auto font-bold">Login</button>
+                <button disabled={isLoading} className="bg-green-500 rounded-md py-3 text-white mt-auto font-bold">Login</button>
+                {error && <div>{error}</div>}
             </div>
         </form>
     </div>

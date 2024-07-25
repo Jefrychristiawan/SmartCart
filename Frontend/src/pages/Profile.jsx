@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import Apple from "../assets/Apple.jpg"
 import AddProduct from "../components/AddProduct"
+import { useLogout } from "../hooks/useLogout"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 
 export default function Profile() {
@@ -8,6 +10,7 @@ export default function Profile() {
     const [products, setProducts] = useState(null)
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState(null)
+    const { user } = useAuthContext()
     useEffect(() => {
         const fetchProducts = async () => {
         const response = await fetch('http://localhost:4000/api/products')
@@ -42,16 +45,22 @@ export default function Profile() {
         }
         console.log(product)
     }
+
+    const { logout } = useLogout()
+    const handleClick = () => {
+        logout()
+    }
   return (
     <div className="flex m-10 gap-10">
         <div className="flex-1 flex flex-col items-center gap-4 border-2 border-gray-700 rounded-lg p-5">
             <img className="w-40 h-40 object-cover rounded-full" src={Apple} alt="" />
-            <span className="font-extrabold text-2xl">Jefry Christiawan</span>
-            <span className="font-bold text-xl">$10.00</span>
+            <span className="font-extrabold text-2xl">{user?.username}</span>
+            <span className="font-bold text-xl">{user?.balance}</span>
+            <button className="bg-red-500 text-white px-5 py-3 rounded-lg" onClick={handleClick}> Logout </button>
             <button className="bg-green-500 text-white px-5 py-3 rounded-lg">Top Up</button>
             <div className="bg-gray-300 border border-gray-400 rounded-lg px-6 py-3 w-96">
                 <span className="font-bold text-gray-500">Email</span><br />
-                <span className="font-bold">jefrychristiawan2005@gmail.com</span>
+                <span className="font-bold">{user?.email}</span>
             </div>
             
             <div className="flex gap-2">

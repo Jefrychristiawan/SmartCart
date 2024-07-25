@@ -1,7 +1,9 @@
 import { HeadphonesOutlined, PermIdentity, Search, ShoppingCartOutlined} from '@mui/icons-material';
 import { green } from '@mui/material/colors';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from "../hooks/useAuthContext"
 export default function SmartCart() {
+  const { user } = useAuthContext()
   return (
     <div className='flex justify-between px-12 py-6 items-center'>
         {/* <div><HeadphonesIcon /></div> */}
@@ -17,10 +19,11 @@ export default function SmartCart() {
         <div className='flex items-center space-x-3'> 
           <Search sx={{ fontSize: 35}}/>
           <ShoppingCartOutlined sx={{ fontSize: 35}}/> 
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-          <Link to="/profile"><PermIdentity sx={{ fontSize: 35}}/> </Link>
-          <p>$0.00</p>
+          {!user && <Link to="/login">Login</Link>}
+          {!user && <Link to="/register">Register</Link>}
+          {user && <Link to="/profile"><PermIdentity sx={{ fontSize: 35}}/> </Link>}
+          
+          {user && <p>{user.balance}</p>}
         </div>
     </div>
   )

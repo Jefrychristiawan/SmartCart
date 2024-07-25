@@ -15,7 +15,8 @@ const loginUser = async (req, res) => {
         // create aa token
         const token = createToken(user._id)
         const username = user.username
-        res.status(200).json({username, email, token})
+        const balance = user.balance
+        res.status(200).json({username, email, token, balance})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -32,10 +33,27 @@ const signupUser = async (req, res) => {
         // create aa token
         const token = createToken(user._id)
 
-        res.status(200).json({username, email, token})
+        res.status(200).json({username, email, token, balance})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 }
 
-module.exports = { signupUser, loginUser }
+//topup user
+const topupUser = async (req, res) => {
+    try {
+        const {email, balance} = req.body
+        const user = await User.findOne({ email })
+        if(!user){
+            throw Error('Incorrect email')
+        }
+
+        user.balance += balance; 
+        await user.save();
+        res.status(200).json({ message: 'Balance updated successfully', username, email, token, balance });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports = { signupUser, loginUser, topupUser }

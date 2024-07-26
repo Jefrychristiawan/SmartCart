@@ -13,13 +13,14 @@ const createOrder = async (req, res) => {
         
         let total = 0;
         const validatedProducts = await Promise.all(products.map(async (item) => {
-            const product = await Product.findById(item.product);
+            const product = await Product.findById(item._id);
             if (!product) {
-                throw new Error(`Product with id ${item.product} not found`);
+                throw new Error(`Product with id ${item._id} not found`);
             }
             total += product.price * item.quantity;
             return {
-                product: item.product,
+                product: item._id,
+                productName: item.name,
                 quantity: item.quantity
             };
         }));

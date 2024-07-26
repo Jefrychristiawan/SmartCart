@@ -17,6 +17,26 @@ export const ordersReducer = (state, action) => {
             return {
                 orders: state.orders.filter((w) => w._id !== action.payload._id)
             };
+        case 'INCREMENT_QUANTITY':
+            return {
+                orders: state.orders.map(order =>
+                    order._id === action.payload._id
+                    ? { ...order, quantity: (order.quantity === order.stock) ? order.quantity: order.quantity + 1 }
+                    : order
+                )
+            };
+        case 'DECREMENT_QUANTITY':
+            return {
+                orders: state.orders.map(order =>
+                    order._id === action.payload._id
+                    ? { ...order, quantity: (order.quantity === 1) ? order.quantity: order.quantity - 1 }
+                    : order
+                )
+            };
+        case 'COMPLETE':
+            return{
+                orders:[]
+            }
         default:
             return state;
     }

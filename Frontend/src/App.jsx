@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
 import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
 // https://i.pinimg.com/originals/f3/20/ee/f320eeb6a56143d7ef2879f4a77c3827.png
 function App() {
   const { user } = useAuthContext()
@@ -40,6 +41,10 @@ function App() {
         <Route 
           path='/shop/:id'
           element={<ProductDetail />}
+        />
+        <Route 
+          path='/cart'
+          element={user ? <Cart /> : <Navigate to="/login" />}
         />
       </Routes>
     </BrowserRouter>

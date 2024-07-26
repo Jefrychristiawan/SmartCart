@@ -5,8 +5,10 @@ import { Link } from "react-router-dom"
 export default function Shop() {
     const [products, setProducts] = useState([])
     const {user} = useAuthContext()
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         const fetchProducts = async () => {
+            setIsLoading(true)
             const response = await fetch('http://localhost:4000/api/products/all',{
                 headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -16,6 +18,7 @@ export default function Shop() {
 
             if (response.ok) {
                 setProducts(json)
+                setIsLoading(false)
                 
             }
         }
@@ -25,7 +28,13 @@ export default function Shop() {
         
     }, [user])
   return (
+    <>
+    {isLoading && 
+    <div className="flex justify-center items-center fixed inset-0 bg-[rgba(0,0,0,0.5)] overflow-auto">
+        <div className="bg-white w-32 h-20 flex justify-center items-center">Loading...</div>
+    </div>}
     <div className="flex m-10">
+        
         <div className='flex flex-col flex-1 space-y-2'>
             <span className="font-bold text-xl">
                 Filter
@@ -110,5 +119,6 @@ export default function Shop() {
             </div>
         </div>
     </div>
+    </>
   )
 }

@@ -8,11 +8,12 @@ import { useAuthContext } from "../hooks/useAuthContext"
 export default function Profile() {
     const [addPopUp, setAddPopUp] = useState(false)
     const [products, setProducts] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [product, setProduct] = useState(null)
     const { user } = useAuthContext()
     useEffect(() => {
         const fetchProducts = async () => {
+            setLoading(true)
         const response = await fetch('http://localhost:4000/api/products',{
             headers: {
                 'Authorization': `Bearer ${user.token}`
@@ -32,7 +33,9 @@ export default function Profile() {
     }, [addPopUp, user])
     
     const handleDelete = async (id) => {
+        setLoading(true)
         if(!user){
+            setLoading(false)
             return
         }
         const response = await fetch('http://localhost:4000/api/products/' + id, {
@@ -45,18 +48,20 @@ export default function Profile() {
     
         if (response.ok) {
           setProducts(products.filter(item => item._id !== id))
+          setLoading(true)
         }
     }
     // console.log(products)
     const handleEdit = async (id) => {
-        
+        setLoading(true)
         const response = await fetch('http://localhost:4000/api/products/' + id)
         const json = await response.json()
         if (response.ok) {
             setProduct(json)
+            setLoading(false)
             setAddPopUp(true)
+
         }
-        console.log(product)
     }
 
     const { logout } = useLogout()
@@ -64,6 +69,11 @@ export default function Profile() {
         logout()
     }
   return (
+    <>
+    {loading && 
+        <div className="flex justify-center items-center fixed inset-0 bg-[rgba(0,0,0,0.5)] overflow-auto">
+            <div className="bg-white w-32 h-20 flex justify-center items-center">Loading...</div>
+        </div>}
     <div className="flex m-10 gap-10">
         <div className="flex-1 flex flex-col items-center gap-4 border-2 border-gray-700 rounded-lg p-5">
             <img className="w-40 h-40 object-cover rounded-full" src={Apple} alt="" />
@@ -101,7 +111,7 @@ export default function Profile() {
                                     <img className="w-40 h-40 object-cover" src={product.image} alt="" />
                                     <span className="text-gray-500">{product.category} </span>
                                     <span className="font-bold">{product.name}</span>
-                                    <span className="text-green-600 font-bold">{product.price}</span>
+                                    <span className="text-green-600 font-bold">${product.price}</span>
                                     <div className="space-x-2">
                                         <button className="bg-green-500 text-white py-1 px-2" onClick={() => handleEdit(product._id)}>Edit</button>
                                         <button className="bg-red-500 text-white py-1 px-2" onClick={() => handleDelete(product._id)}>Delete</button>
@@ -122,6 +132,7 @@ export default function Profile() {
             <AddProduct product = {product} setAddPopUp={setAddPopUp}/>
         )}
     </div>
+    </>
   )
 }
 

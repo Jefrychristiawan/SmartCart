@@ -15,9 +15,7 @@ export default function Navbar() {
       <Link to="/shop" className={getLinkClass('/shop')}>
         Shop
       </Link>
-      <Link to="/news" className={getLinkClass('/news')}>
-        News
-      </Link>
+      
     </div>
   );
 }

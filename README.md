@@ -26,7 +26,7 @@ SmartCart uses **Tailwind CSS** for a clean and responsive design, ensuring a co
 1. Clone the repository:
 
    ```bash
-   https://github.com/Jefrychristiawan/SmartCart.git
+   git clone https://github.com/Jefrychristiawan/SmartCart.git
 2. Open up 2 terminals
 3. in first terminal:
    ```bash

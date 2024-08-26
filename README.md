@@ -27,3 +27,14 @@ SmartCart uses **Tailwind CSS** for a clean and responsive design, ensuring a co
 
    ```bash
    https://github.com/Jefrychristiawan/SmartCart.git
+2. Open up 2 terminals
+3. in first terminal:
+   ```bash
+   cd backend
+   npm install
+   npm run dev
+4. in second terminal:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev

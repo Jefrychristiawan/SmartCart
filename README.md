@@ -21,7 +21,7 @@
 
 SmartCart uses **Tailwind CSS** for a clean and responsive design, ensuring a consistent user experience across all devices.
 
-## 📦 Installation
+## 📦 Installation & Run Step
 
 1. Clone the repository:
 
